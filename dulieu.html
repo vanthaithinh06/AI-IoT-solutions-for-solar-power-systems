@@ -1,0 +1,205 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dữ liệu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="dulieu.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
+</head>
+<body class="font-roboto bg-gray-100 flex">
+    <aside class="w-64 bg-[#2d3748] text-white min-h-screen p-4">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-bold">Dữ liệu</h1>
+        </div>
+        <nav>
+            <ul>
+                <li class="mb-4">
+                    <a href="index.html" class="flex items-center p-2 hover:bg-blue-700 rounded">
+                        <i class="fas fa-tachometer-alt"></i>   Tổng quan<!--<a href="index.html">Tổng quan</a>-->
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="realtime.html" class="flex items-center p-2 hover:bg-blue-700 rounded">
+                        <i class="fas fa-database"></i>     Dữ liệu thời gian thực
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="dulieu.html" class="flex items-center p-2 hover:bg-blue-700 rounded">
+                        <i class="fas fa-file-import"></i>     Dữ liệu 
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="#" class="flex items-center p-2 hover:bg-blue-700 rounded">
+                        <i class="fas fa-cog mr-2"></i>       Cài đặt
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    <div class="flex-1 p-6">
+        <header class="text-center my-4">
+            <h1 class="text-4xl font-bold text-gray-800">Trích xuất dữ liệu</h1>
+        </header>
+        <main>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4">Bức xạ nhiệt</h2>
+                    <form id="dataFormRadiation" class="space-y-4">
+                        <div>
+                            <label for="startDateRadiation" class="block text-gray-700">Chọn ngày bắt đầu:</label>
+                            <input type="date" id="startDateRadiation" name="startDateRadiation" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="endDateRadiation" class="block text-gray-700">Chọn ngày kết thúc:</label>
+                            <input type="date" id="endDateRadiation" name="endDateRadiation" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div class="text-center">
+                            <button type="button" onclick="fetchData('Radiation')" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600">Trích xuất</button>
+                        </div>
+                    </form>
+                    <div id="dataResultRadiation" class="mt-6">
+                        <!-- Data will be displayed here -->
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4">Tốc độ gió</h2>
+                    <form id="dataFormWindSpeed" class="space-y-4">
+                        <div>
+                            <label for="startDateWindSpeed" class="block text-gray-700">Chọn ngày bắt đầu:</label>
+                            <input type="date" id="startDateWindSpeed" name="startDateWindSpeed" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="endDateWindSpeed" class="block text-gray-700">Chọn ngày kết thúc:</label>
+                            <input type="date" id="endDateWindSpeed" name="endDateWindSpeed" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div class="text-center">
+                            <button type="button" onclick="fetchData('WindSpeed')" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600">Trích xuất</button>
+                        </div>
+                    </form>
+                    <div id="dataResultWindSpeed" class="mt-6">
+                        <!-- Data will be displayed here -->
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4">Nhiệt độ</h2>
+                    <form id="dataFormTemperature" class="space-y-4">
+                        <div>
+                            <label for="startDateTemperature" class="block text-gray-700">Chọn ngày bắt đầu:</label>
+                            <input type="date" id="startDateTemperature" name="startDateTemperature" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="endDateTemperature" class="block text-gray-700">Chọn ngày kết thúc:</label>
+                            <input type="date" id="endDateTemperature" name="endDateTemperature" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div class="text-center">
+                            <button type="button" onclick="fetchData('Temperature')" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600">Trích xuất</button>
+                        </div>
+                    </form>
+                    <div id="dataResultTemperature" class="mt-6">
+                        <!-- Data will be displayed here -->
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4">Độ ẩm</h2>
+                    <form id="dataFormHumidity" class="space-y-4">
+                        <div>
+                            <label for="startDateHumidity" class="block text-gray-700">Chọn ngày bắt đầu:</label>
+                            <input type="date" id="startDateHumidity" name="startDateHumidity" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="endDateHumidity" class="block text-gray-700">Chọn ngày kết thúc:</label>
+                            <input type="date" id="endDateHumidity" name="endDateHumidity" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div class="text-center">
+                            <button type="button" onclick="fetchData('Humidity')" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600">Trích xuất</button>
+                        </div>
+                    </form>
+                    <div id="dataResultHumidity" class="mt-6">
+                        <!-- Data will be displayed here -->
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4">Điện áp</h2>
+                    <form id="dataFormVoltage" class="space-y-4">
+                        <div>
+                            <label for="startDateVoltage" class="block text-gray-700">Chọn ngày bắt đầu:</label>
+                            <input type="date" id="startDateVoltage" name="startDateVoltage" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="endDateVoltage" class="block text-gray-700">Chọn ngày kết thúc:</label>
+                            <input type="date" id="endDateVoltage" name="endDateVoltage" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div class="text-center">
+                            <button type="button" onclick="fetchData('Voltage')" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600">Trích xuất</button>
+                        </div>
+                    </form>
+                    <div id="dataResultVoltage" class="mt-6">
+                        <!-- Data will be displayed here -->
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4">Dòng điện</h2>
+                    <form id="dataFormCurrent" class="space-y-4">
+                        <div>
+                            <label for="startDateCurrent" class="block text-gray-700">Chọn ngày bắt đầu:</label>
+                            <input type="date" id="startDateCurrent" name="startDateCurrent" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="endDateCurrent" class="block text-gray-700">Chọn ngày kết thúc:</label>
+                            <input type="date" id="endDateCurrent" name="endDateCurrent" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div class="text-center">
+                            <button type="button" onclick="fetchData('Current')" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600">Trích xuất</button>
+                        </div>
+                    </form>
+                    <div id="dataResultCurrent" class="mt-6">
+                        <!-- Data will be displayed here -->
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4">Công suất</h2>
+                    <form id="dataFormPower" class="space-y-4">
+                        <div>
+                            <label for="startDatePower" class="block text-gray-700">Chọn ngày bắt đầu:</label>
+                            <input type="date" id="startDatePower" name="startDatePower" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="endDatePower" class="block text-gray-700">Chọn ngày kết thúc:</label>
+                            <input type="date" id="endDatePower" name="endDatePower" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div class="text-center">
+                            <button type="button" onclick="fetchData('Power')" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600">Trích xuất</button>
+                        </div>
+                    </form>
+                    <div id="dataResultPower" class="mt-6">
+                        <!-- Data will be displayed here -->
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4">Năng lượng</h2>
+                    <form id="dataFormEnergy" class="space-y-4">
+                        <div>
+                            <label for="startDateEnergy" class="block text-gray-700">Chọn ngày bắt đầu:</label>
+                            <input type="date" id="startDateEnergy" name="startDateEnergy" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="endDateEnergy" class="block text-gray-700">Chọn ngày kết thúc:</label>
+                            <input type="date" id="endDateEnergy" name="endDateEnergy" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div class="text-center">
+                            <button type="button" onclick="fetchData('Energy')" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600">Trích xuất</button>
+                        </div>
+                    </form>
+                    <div id="dataResultEnergy" class="mt-6">
+                        <!-- Data will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

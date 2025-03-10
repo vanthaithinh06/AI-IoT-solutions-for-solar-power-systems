@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:,">
+
+    <!-- Firebase SDK -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+      const firebaseConfig = {
+          apiKey: "AIzaSyB8HxGOHy2SoLfxZIBaHVsym07I1JT65-8",
+          authDomain: "dht11-a44e5.firebaseapp.com",
+          databaseURL: "https://dht11-a44e5-default-rtdb.firebaseio.com/",
+          projectId: "dht11-a44e5",
+          storageBucket: "dht11-a44e5.appspot.com",
+          messagingSenderId: "563651227211",
+          appId: "1:563651227211:web:1490d34d7b26c4a10827ce",
+          measurementId: "G-CDR71MQGTJ"
+      };
+
+      // Khởi tạo Firebase
+      const app = initializeApp(firebaseConfig);
+      const database = getDatabase(app);
+      window.firebaseDatabase = database; // Xuất biến để scripts.js sử dụng
+  </script>
+
+  <!-- Chart.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Script chính -->
+  <script type="module" src="scripts.js"></script>
+</head>
+<body>
+  <div class="sidebar">
+    <img alt="User Avatar" height="50" src="https://storage.googleapis.com/a1aa/image/rtXQKVIidhouAh6xT7fJPZg9fCWfs6cq9TVbPzCbnXbuejfgC.jpg" width="50"/>
+    <h2>Xin chào,</h2>
+    <ul>
+      <li><i class="fas fa-tachometer-alt"></i><a href="index.html">Tổng quan</a></li>
+      <li><i class="fas fa-database"></i><a href="realtime.html">Dữ liệu thời gian thực</a></li>
+      <li><i class="fas fa-file-import"></i><a href="dulieu.html">Dữ liệu</a></li>   
+    </ul>
+  </div>
+  <div class="main-content">
+    <div class="header">
+      <i class="fas fa-bars menu-icon"></i>
+      <div class="stats">
+        <div>
+          <h3 id="currentPower">-- W</h3>
+          <p>Công suất hiện tại</p>
+        </div>
+        <div>
+          <h3 id="dailyEnergy">-- W</h3>
+          <p>Công suất dự đoán</p>
+        </div>
+        <div>
+          <h3 id="monthlyEnergy">-- KWh</h3>
+          <p>Năng lượng tích trữ trong tháng</p>
+        </div>
+        <div>
+          <h3 id="totalEnergy">-- KWh</h3>
+          <p>Tổng năng lượng tích trữ</p>
+        </div>
+      </div>      
+    </div>
+    <div class="content">
+      <div class="left-panel">
+        <div class="chart-container">
+          <h3>Công suất phát điện</h3>
+          <canvas id="powerChart"></canvas>
+          <p>Lần cập nhật gần nhất: <span id="updateTime">Chưa có dữ liệu</span></p>
+          <footer>Thời gian thực: <span id="currentTime"></span></footer>
+
+        </div>
+      </div>
+      <div class="right-panel">
+        <h3>Thông tin trạm</h3>
+        <table>
+          <tr><th>Trạm năng lượng mặt trời Điện lực thành phố Bình Thuận</th></tr>
+          <tr><td>Công suất lắp đặt: 50 kWp</td></tr>
+          <tr><td>Tình trạng hoạt động: Đang vận hành</td></tr>
+          <tr><td>Thời gian cập nhật: <span id="updateTime">--:--:--</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="timer">
+      <i class="fas fa-clock"></i>
+      <span class="time" id="currentTime">--:--:--</span>
+    </div>
+  </div>
+</body>
+</html>
