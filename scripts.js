@@ -2,7 +2,54 @@ import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10
 
 const database = window.firebaseDatabase;
 
-// Hàm cập nhật dữ liệu vào HTML
+// Initialize power chart
+let powerChart;
+
+function initializeChart() {
+    const ctx = document.getElementById('powerChart').getContext('2d');
+    powerChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Công suất (W)',
+                data: [],
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Công suất (W)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Thời gian'
+                    }
+                }
+            }
+        }
+    });
+    return powerChart;
+}
+
+// Update HTML values
 function updateValue(elementId, value, unit = "") {
     const element = document.getElementById(elementId);
     if (element) {
@@ -10,92 +57,54 @@ function updateValue(elementId, value, unit = "") {
     }
 }
 
-// Lắng nghe dữ liệu từ Firebase
-const dataRef = ref(database, "nhayen/thietbi/pinmattroi");
-onValue(dataRef, (snapshot) => {
-    const data = snapshot.val();
-    if (!data) {
-        console.error("Không có dữ liệu từ Firebase!");
-        return;
-    }
-    console.log("Dữ liệu từ Firebase:", data);
-    updateValue("currentPower", data.congsuat, "W");
-    updateValue("voltageVDC", data.dienap, "V");
-    updateValue("monthlyEnergy", data.nangluong, "V");
-    updateValue("currentA", data.dongdien, "A");
-    updateValue("dailyEnergy", data.congsuatdudoan?.predicted_power, "W");
-    updateValue("systemEfficiency", data.hieusuathethong, "%");
-});
+// Update chart with new data
+function updateChart(newValue) {
+    const currentTime = new Date().toLocaleTimeString();
+    
+    powerChart.data.labels.push(currentTime);
+    powerChart.data.datasets[0].data.push(newValue);
 
-document.addEventListener("DOMContentLoaded", async function () {
-    const SPREADSHEET_ID = "1jCoi7WkHpYyfpsiInC0xvOcEuGslzKFMTEe2WvcgqUM";
-    const SHEET_NAME = "Data";
-
-    const chartsConfig = [
-        { id: "powerChart", label: ["Power"], columns: [7] }
-    ];
-
-    async function fetchSheetData() {
-        const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json`;
-        try {
-            const response = await fetch(url);
-            const text = await response.text();
-            const json = JSON.parse(text.substring(47, text.length - 2));
-            return json.table.rows.map(row => row.c.map(cell => cell ? cell.v : null));
-        } catch (error) {
-            console.error("Lỗi khi lấy dữ liệu từ Google Sheets:", error);
-            return null;
-        }
+    // Keep only last 10 points
+    if (powerChart.data.labels.length > 10) {
+        powerChart.data.labels.shift();
+        powerChart.data.datasets[0].data.shift();
     }
 
-    let lastSheetData = null;
-    let chartInstances = {};
+    powerChart.update();
+}
 
-    async function updateCharts() {
-        const sheetData = await fetchSheetData();
-        if (!sheetData) return;
+// Initialize when document is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize chart
+    powerChart = initializeChart();
 
-        if (JSON.stringify(sheetData) === JSON.stringify(lastSheetData)) {
-            console.log("Dữ liệu không thay đổi, không cập nhật biểu đồ.");
+    // Listen to Firebase data
+    const dataRef = ref(database, "nhayen/thietbi/pinmattroi");
+    onValue(dataRef, (snapshot) => {
+        const data = snapshot.val();
+        if (!data) {
+            console.error("Không có dữ liệu từ Firebase!");
             return;
         }
 
-        console.log("Dữ liệu thay đổi, cập nhật biểu đồ.");
-        lastSheetData = sheetData;
+        // Update values
+        updateValue("currentPower", data.congsuat, "W");
+        updateValue("monthlyEnergy", data.nangluong, "kWh");
+        updateValue("dailyEnergy", data.congsuatdudoan?.predicted_power, "W");
 
-        for (const config of chartsConfig) {
-            const ctx = document.getElementById(config.id)?.getContext("2d");
-            if (!ctx) continue;
+        // Update chart with new power value
+        updateChart(data.congsuat);
 
-            if (chartInstances[config.id]) {
-                chartInstances[config.id].destroy();
-            }
+        // Update time
+        const currentTime = new Date().toLocaleTimeString();
+        const updateTimeElements = document.querySelectorAll('#updateTime');
+        updateTimeElements.forEach(el => el.textContent = currentTime);
+    });
 
-            const labels = sheetData.map(row => row[0]);
-            const datasets = config.columns.map((colIndex, i) => ({
-                label: Array.isArray(config.label) ? config.label[i] : config.label,
-                data: sheetData.map(row => row[colIndex] !== null ? parseFloat(row[colIndex]) : null),
-                borderColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"][i % 5],
-                backgroundColor: ["#FF638420", "#36A2EB20", "#FFCE5620", "#4BC0C020", "#9966FF20"][i % 5],
-                borderWidth: 2,
-                tension: 0.4
-            }));
-
-            chartInstances[config.id] = new Chart(ctx, {
-                type: "line",
-                data: { labels, datasets },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: { title: { display: true, text: "Thời gian" } },
-                        y: { title: { display: true, text: "Giá trị" }, beginAtZero: false }
-                    },
-                    spanGaps: false 
-                }
-            });
-        }
-    }
-
-    await updateCharts();
-    setInterval(updateCharts, 1000);
+    // Update current time every second
+    setInterval(() => {
+        const now = new Date().toLocaleTimeString();
+        const timeElements = document.querySelectorAll('#currentTime');
+        timeElements.forEach(el => el.textContent = now);
+    }, 1000);
 });

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar Power Monitoring</title>
+    <link rel="stylesheet" href="hi.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="realtime.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link rel="icon" href="data:,">
+</head>
+<body>
+
+    <div class="sidebar">
+        <img alt="User Avatar" height="120" src="logotruong.webp" width="120"/> 
+        <h2>Xin chào,</h2>
+        <ul>
+          <li><i class="fas fa-tachometer-alt"></i><a href="index.html">Tổng quan</a></li>
+          <li><i class="fas fa-database"></i><a href="realtime.html">Dữ liệu thời gian thực</a></li>
+          <li><i class="fas fa-file-import"></i><a href="dulieu.html">Dữ liệu</a></li> 
+          <li><i class="fas fa-file-import"></i><a href="hihi.html">Dữ liệu</a></li>  
+        </ul>
+      </div>
+
+    <div class="main-content">
+        <h1>Solar Power Monitoring System</h1>
+        
+        <div class="grid-container">
+            <div class="data-box">
+                <h3>Bức xạ nhiệtnhiệt</h3>
+                <p id="radiationValue">-- W/m^22</p>
+            </div>
+            
+            <div class="data-box">
+                <h3>Tốc đô giógió</h3>
+                <p id="windSpeedValue">-- V</p>
+            </div>
+            
+            <div class="data-box">
+                <h3>Nhiệt độđộ</h3>
+                <p id="temperatureValue">-- A</p>
+            </div>
+            
+            <div class="data-box">
+                <h3>Độ ẩmẩm</h3>
+                <p id="humidityValue">-- V</p>
+            </div>
+            
+            <div class="data-box">
+                <h3>Điện áp</h3>
+                <p id="voltageValue">-- W</p>
+            </div>
+            
+            <div class="data-box">
+                <h3>Công suất</h3>
+                <p id="powerValue">-- %</p>
+            </div>
+
+            <div class="data-box">
+                <h3>Năng lượng</h3>
+                <p id="energyValue">-- W</p>
+            </div>
+
+            <div class="data-box">
+                <h3>Công suất dự đoánđoán</h3>
+                <p id="predictedPowerValue">-- W</p>
+            </div>
+        </div>
+        <button id="sendToSheetsButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
+            Gửi dữ liệu đến Google Sheets
+          </button>
+
+        <div class="chart-container">
+            <canvas id="powerChart"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="hi.js"></script>
+</body>
+</html>

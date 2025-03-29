@@ -34,20 +34,20 @@ onValue(dataRef, (snapshot) => {
 
 document.addEventListener("DOMContentLoaded", async function () {
 
-    const SPREADSHEET_ID = "1jCoi7WkHpYyfpsiInC0xvOcEuGslzKFMTEe2WvcgqUM";
-    const SHEET_NAME = "Data";
+    const SPREADSHEET_ID = "19auwndp7u-Jp3yVe6ulasICyAfoxifrXbtziY7QYkpY";
+    const SHEET_NAME = "SolarData";
 
     // Cấu hình các biểu đồ
     const chartsConfig = [
-        { id: "radiationHumidityChart", label: ["Radiation", "Humidity"], columns: [1, 2] },
-        { id: "temperatureWindChart", label: ["Temperature", "Wind Speed"], columns: [3, 4] },
+        { id: "radiationHumidityChart", label: ["Radiation", "Humidity"], columns: [1, 4] },
+        { id: "temperatureWindChart", label: ["Temperature", "Wind Speed"], columns: [3, 2] },
         { id: "voltageCurrentChart", label: ["Voltage (V)", "Current (A)"], columns: [5, 6] },
-        { id: "powerEnergyChart", label: ["Power (W)", "Energy (kWh)", "Power Predicted"], columns: [7, 8, 9] },
-        { id: "powerPredictedChart", label: ["Power Predicted"], columns: [9] } // Biểu đồ mới
+        { id: "powerEnergyChart", label: ["Power (W)", "Power Predicted"], columns: [6, 7] },
+        { id: "powerPredictedChart", label: ["Power Predicted"], columns: [8] } // Biểu đồ mới
     ];
 
     async function fetchSheetData() {
-        const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json`;
+        const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1321670110`;
         try {
             const response = await fetch(url);
             const text = await response.text();

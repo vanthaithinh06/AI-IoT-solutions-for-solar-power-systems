@@ -1,16 +1,25 @@
 function fetchData(dataType) {
-    const sheetId = "1jCoi7WkHpYyfpsiInC0xvOcEuGslzKFMTEe2WvcgqUM";
-    const sheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
-
+    const sheetId = "19auwndp7u-Jp3yVe6ulasICyAfoxifrXbtziY7QYkpY";
+    const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1321670110`;
+/*
+    nhayen/thietbi/pinmattroi/thietbi/bucxamattroi
+    nhayen/thietbi/pinmattroi/thietbi/tocdogio
+    nhayen/thietbi/pinmattroi/thietbi/nhietdo
+    nhayen/thietbi/pinmattroi/thietbi/doam
+    nhayen/thietbi/pinmattroi/thietbi/dienap
+    nhayen/thietbi/pinmattroi/thietbi/congsuat
+    nhayen/thietbi/pinmattroi/thietbi/nangluong
+    nhayen/thietbi/pinmattroi/thietbi/power_predicted/congsuatdudoan
+ */
     const columnMapping = {
         "Radiation": [0, 1],
-        "WindSpeed": [0, 4],
+        "WindSpeed": [0, 2],
         "Temperature": [0, 3],
-        "Humidity": [0, 2],
+        "Humidity": [0, 4],
         "Voltage": [0, 5],
-        "Current": [0, 6],
-        "Power": [0, 7],
-        "Energy": [0, 8]
+        "Current": [0, 9],
+        "Power": [0, 6],
+        "Energy": [0, 7]
     };
     
     if (!columnMapping[dataType]) {
