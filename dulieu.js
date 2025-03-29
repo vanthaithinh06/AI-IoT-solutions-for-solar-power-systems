@@ -121,6 +121,21 @@ function closePopup() {
 
 const style = document.createElement("style");
 style.innerHTML = `
+
+.sidebar {
+    width: 250px;
+    background-color: #2d3748;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    height: calc(100vh - 20px);
+    position: sticky;
+    top: 0;
+}
+        
     .popup-overlay {
         position: fixed;
         top: 0; left: 0;
@@ -148,5 +163,32 @@ style.innerHTML = `
         padding: 5px 10px;
         cursor: pointer;
     }
+
+    .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.logo {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    display: block;
+    margin: 0 auto;
+}
+
+.sidebar img {
+    width: 120px;
+    height: 120px;
+    display: block;
+    margin: 20px auto;
+    border-radius: 0;
+}
 `;
 document.head.appendChild(style);

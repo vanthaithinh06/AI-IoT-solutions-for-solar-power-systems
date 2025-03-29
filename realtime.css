@@ -1,10 +1,11 @@
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
     display: flex;
-}
+    height: 100vh;
+    overflow: hidden;
+  }
 .sidebar {
     width: 250px;
     background-color: #2d3748;
@@ -17,11 +18,7 @@ body {
     position: sticky;
     top: 0;
   }
-  .sidebar img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-  }
+
   .sidebar h2 {
     margin: 10px 0;
     font-size: 1.2em;
