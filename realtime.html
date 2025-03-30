@@ -66,14 +66,23 @@
         </div>
         <div class="flex flex-wrap">
             <div class="chart-container w-full md:w-1/2">
-                <h2>Bức xạ mặt trời & Độ ẩm</h2>
+                <h2>Bức xạ mặt trời </h2>
                 <canvas id="radiationHumidityChart"></canvas>
             </div>
             <div class="chart-container w-full md:w-1/2">
-                <h2>Nhiệt độ & Tốc độ gió</h2>
+                <h2>Nhiệt độ & Độ ẩm</h2>
                 <canvas id="temperatureWindChart"></canvas>
             </div>
         </div>
+
+                <!-- ... existing charts ... -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4">Tốc độ gió</h2>
+            <div class="chart-container">
+                <canvas id="windSpeedChart"></canvas>
+            </div>
+        </div>
+        <!-- ... other chart containers ... -->
 
         <div class="flex flex-wrap">
             <div class="chart-container w-full md:w-1/2">
@@ -81,14 +90,14 @@
                 <canvas id="voltageCurrentChart"></canvas>
             </div>
             <div class="chart-container w-full md:w-1/2">
-                <h2>Công suất & Năng lượng & Dự đoán công suất</h2>
-                <canvas id="powerEnergyChart"></canvas>
+                <h2>Công suất & Công suất dự đoán </h2>
+                <canvas id="powerPredictedChart"></canvas>
             </div>
         </div>
 
         <div class="chart-container w-full">
-            <h2>Dự đoán công suất</h2>
-            <canvas id="powerPredictedChart"></canvas>
+            <h2>Năng lượng</h2>
+            <canvas id="powerEnergyChart"></canvas>
         </div>
         <div class="control-panel">
             <h2>Control Panel & Settings</h2>

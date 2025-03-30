@@ -39,11 +39,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Cấu hình các biểu đồ
     const chartsConfig = [
-        { id: "radiationHumidityChart", label: ["Radiation", "Humidity"], columns: [1, 4] },
-        { id: "temperatureWindChart", label: ["Temperature", "Wind Speed"], columns: [3, 2] },
+        { id: "radiationHumidityChart", label: ["Radiation",], columns: [1] },
+        { id: "windSpeedChart",label: ["Wind Speed"],columns: [1], colors: ["#2ecc71"],bgColors: ["#27ae6020"]},
+        { id: "temperatureWindChart", label: ["Temperature", "Humidity"], columns: [3, 4] },
         { id: "voltageCurrentChart", label: ["Voltage (V)", "Current (A)"], columns: [5, 6] },
-        { id: "powerEnergyChart", label: ["Power (W)", "Power Predicted"], columns: [6, 7] },
-        { id: "powerPredictedChart", label: ["Power Predicted"], columns: [8] } // Biểu đồ mới
+        { id: "powerPredictedChart", label: ["Power (W)", "Power Predicted"], columns: [6, 8] },
+        { id: "powerEnergyChart", label: ["Power Predicted"], columns: [7] } // Biểu đồ mới
     ];
 
     async function fetchSheetData() {
