@@ -4,8 +4,16 @@ body {
     padding: 0;
     display: flex;
     height: 100vh;
-    overflow: hidden;
+
   }
+
+  .chart-container canvas {
+    width: 100%;
+    height: 150px; /* Reduced from 200px */
+    min-height: 120px; /* Added minimum height */
+}
+
+/* ... existing code ... */
 .sidebar {
     width: 250px;
     background-color: #2d3748;
