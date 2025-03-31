@@ -10,6 +10,7 @@ self.addEventListener('message', event => {
   if (message.type === 'start') {
     sheetURL = message.url;
     lastData = message.data;
+    console.log('[SW] Starting with data:', lastData);
     startSending(message.interval);
     
     // Phản hồi lại trang chính
@@ -23,7 +24,10 @@ self.addEventListener('message', event => {
     });
   } 
   else if (message.type === 'update') {
+    console.log('[SW] Updating data:', message.data);
+    console.log('[SW] Current value before update:', lastData.current);
     lastData = message.data;
+    console.log('[SW] Current value after update:', lastData.current);
   }
   else if (message.type === 'stop') {
     stopSending();
@@ -67,6 +71,9 @@ async function sendData() {
     // Cập nhật timestamp
     const data = {...lastData, timestamp: new Date().toISOString()};
     
+    // Log dữ liệu dòng điện trước khi gửi
+    console.log('[SW] Sending data with current value:', data.current);
+    
     // Chuyển đổi dữ liệu thành JSON
     const jsonData = JSON.stringify(data);
     
@@ -85,12 +92,17 @@ async function sendData() {
       clients.forEach(client => {
         client.postMessage({
           type: 'sent',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          dataSent: {
+            current: data.current,
+            allFields: Object.keys(data)
+          }
         });
       });
     });
   } catch (error) {
     // Thông báo lỗi
+    console.error('[SW] Error sending data:', error);
     self.clients.matchAll().then(clients => {
       clients.forEach(client => {
         client.postMessage({

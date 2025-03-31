@@ -4,10 +4,11 @@ const columnMapping = {
     "Temperature": [0, 3],
     "Humidity": [0, 4],
     "Voltage": [0, 5],
-    "Current": [0, 9],
-    "Power": [0, 6],
-    "Energy": [0, 7]
-};
+    "Current": [0, 6],
+    "Power": [0, 7],
+    "Energy": [0, 8],
+    "Predicted Power": [0, 9]
+};//https://script.google.com/macros/s/AKfycbzfiKethCCcF_4Z2YK3NoJsjeZXo2FvuQX0YfLlvqOngIYRIoBIriviTXZ06utJgnuybg/exec
 function fetchData(dataType) {
     const SPREADSHEET_ID = "19auwndp7u-Jp3yVe6ulasICyAfoxifrXbtziY7QYkpY";
     const sheetUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1321670110`;

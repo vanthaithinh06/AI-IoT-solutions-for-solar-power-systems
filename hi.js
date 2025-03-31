@@ -23,13 +23,13 @@ let serviceWorkerRegistration = null;
 // Function to send data to Google Sheets
 async function sendToGoogleSheets(data) {
     try {
-        const sheetURL = "https://script.google.com/macros/s/AKfycbwFPNcjeehbxzmZyikmcI_WEcx49WJVukP7HHZYdq3v-SWSSvZ9z6J9_Y4f6YM7ou-ebw/exec";
+        const sheetURL = "https://script.google.com/macros/s/AKfycbzfiKethCCcF_4Z2YK3NoJsjeZXo2FvuQX0YfLlvqOngIYRIoBIriviTXZ06utJgnuybg/exec";
         
         // Đảm bảo timestamp luôn được cập nhật mới nhất
         data.timestamp = new Date().toISOString();
         
         console.log("Dữ liệu đang gửi đến Google Sheets:", data);
-        
+        console.log("Kiểm tra dữ liệu dòng điện trước khi gửi:", data.current);
         // Chuyển đổi toàn bộ dữ liệu thành một chuỗi JSON duy nhất
         const jsonData = JSON.stringify(data);
         
@@ -49,6 +49,9 @@ async function sendToGoogleSheets(data) {
         return false;
     }
 }
+
+
+
 
 // Function to update value in HTML
 function updateValue(elementId, value, unit = "") {
@@ -71,10 +74,53 @@ const dataPaths = {
     temperature: "nhayen/thietbi/pinmattroi/nhietdo",
     humidity: "nhayen/thietbi/pinmattroi/doam",
     voltage: "nhayen/thietbi/pinmattroi/dienap",
+    current: "nhayen/thietbi/pinmattroi/dongdien",
     power: "nhayen/thietbi/pinmattroi/congsuat",
     energy: "nhayen/thietbi/pinmattroi/nangluong",
     predictedPower: "nhayen/thietbi/pinmattroi/congsuatdudoan"
 };
+
+const rootRef = ref(database);
+get(rootRef).then((snapshot) => {
+    console.log("Firebase connection successful");
+}).catch((error) => {
+    console.error("Firebase connection error:", error);
+});
+
+// Initialize all data displays
+Object.entries(dataPaths).forEach(([key, path]) => {
+    console.log(`Setting up listener for ${key} at path: ${path}`);
+    const dataRef = ref(database, path);
+    
+    onValue(dataRef, (snapshot) => {
+        const data = snapshot.val();
+        console.log(`Data update for ${key}:`, data);
+        
+        if (data === null || data === undefined) {
+            console.warn(`No data found at path: ${path}`);
+            updateValue(`${key}Value`, null, getUnit(key));
+            return;
+        }
+        
+        // Store data for Google Sheets
+        if (key === 'predictedPower' && typeof data === 'object' && data.predicted_power !== undefined) {
+            collectedData[key] = data.predicted_power;
+        } else {
+            collectedData[key] = data;
+        }
+        
+        // Thêm log đặc biệt cho dòng điện
+        if (key === 'current') {
+            console.log('Dữ liệu dòng điện được cập nhật:', data);
+            console.log('collectedData sau khi cập nhật dòng điện:', collectedData);
+        }
+        
+        // Cập nhật dữ liệu cho Service Worker
+        updateServiceWorkerData();
+        
+        // ... rest of the code ...
+    });
+});
 
 // Units for each data type
 function getUnit(key) {
@@ -84,6 +130,7 @@ function getUnit(key) {
         temperature: "°C",
         humidity: "%",
         voltage: "V",
+        current: "A", 
         power: "W",
         energy: "W",
         predictedPower: "W"
@@ -145,6 +192,7 @@ let collectedData = {
     temperature: null,
     humidity: null,
     voltage: null,
+    current: null,
     power: null,
     energy: null,
     predictedPower: null
@@ -164,6 +212,7 @@ async function registerServiceWorker() {
                 
                 if (message.type === 'sent') {
                     console.log('Dữ liệu đã được gửi lúc:', new Date(message.timestamp).toLocaleTimeString('vi-VN'));
+                    console.log('Chi tiết dữ liệu đã gửi:', message.dataSent);
                 } 
                 else if (message.type === 'error') {
                     console.error('Lỗi khi gửi dữ liệu:', message.error);
@@ -193,7 +242,7 @@ async function registerServiceWorker() {
 // Hàm bắt đầu gửi dữ liệu với Service Worker
 function startDataUploadWithServiceWorker() {
     if (navigator.serviceWorker.controller) {
-        const sheetURL = "https://script.google.com/macros/s/AKfycbwFPNcjeehbxzmZyikmcI_WEcx49WJVukP7HHZYdq3v-SWSSvZ9z6J9_Y4f6YM7ou-ebw/exec";
+        const sheetURL = "https://script.google.com/macros/s/AKfycbzfiKethCCcF_4Z2YK3NoJsjeZXo2FvuQX0YfLlvqOngIYRIoBIriviTXZ06utJgnuybg/exec";
         
         // Gửi tin nhắn đến Service Worker để bắt đầu gửi dữ liệu
         navigator.serviceWorker.controller.postMessage({
@@ -261,7 +310,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Check if elements exist
     const elementIds = [
         'radiationValue', 'windSpeedValue', 'temperatureValue',
-        'humidityValue', 'voltageValue', 'powerValue',
+        'humidityValue', 'voltageValue', 'currentValue', 'powerValue',
         'energyValue', 'predictedPowerValue', 'powerChart',
         'sendToSheetsButton'
     ];
@@ -400,4 +449,4 @@ if (localStorage.getItem('dataUploadActive') === 'true') {
     } else {
         document.addEventListener('DOMContentLoaded', registerServiceWorker);
     }
-}
+}//https://script.google.com/macros/s/AKfycbzfiKethCCcF_4Z2YK3NoJsjeZXo2FvuQX0YfLlvqOngIYRIoBIriviTXZ06utJgnuybg/exec
