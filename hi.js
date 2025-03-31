@@ -21,15 +21,32 @@ let dataUploadIntervalId = null;
 let serviceWorkerRegistration = null;
 
 // Function to send data to Google Sheets
+// Function to send data to Google Sheets
+// Function to send data to Google Sheets
 async function sendToGoogleSheets(data) {
     try {
-        const sheetURL = "https://script.google.com/macros/s/AKfycbzfiKethCCcF_4Z2YK3NoJsjeZXo2FvuQX0YfLlvqOngIYRIoBIriviTXZ06utJgnuybg/exec";
+        const sheetURL = "https://script.google.com/macros/s/AKfycbwf7LyEmqoZL5_o8TNYcCfvTtjfqd3sj8hILIJT2x2h-ANPPZH5okMrYY9Tn9G2bzgPtQ/exec";
         
         // Đảm bảo timestamp luôn được cập nhật mới nhất
         data.timestamp = new Date().toISOString();
         
+        // Đảm bảo các giá trị 0 được giữ nguyên, không bị chuyển thành null hoặc undefined
+        for (const key in data) {
+            // Kiểm tra chính xác giá trị 0 (số) hoặc "0" (chuỗi)
+            if (data[key] === 0 || data[key] === "0") {
+                // Đảm bảo giá trị 0 được giữ nguyên là số
+                data[key] = 0;
+                console.log(`Đã xử lý giá trị 0 cho ${key}`);
+            } else if (data[key] === null || data[key] === undefined || data[key] === "") {
+                // Đặt giá trị rỗng cho các giá trị null/undefined
+                data[key] = "";
+            }
+        }
+        
         console.log("Dữ liệu đang gửi đến Google Sheets:", data);
         console.log("Kiểm tra dữ liệu dòng điện trước khi gửi:", data.current);
+        console.log("Kiểm tra dữ liệu công suất trước khi gửi:", data.power);
+        
         // Chuyển đổi toàn bộ dữ liệu thành một chuỗi JSON duy nhất
         const jsonData = JSON.stringify(data);
         
@@ -39,7 +56,10 @@ async function sendToGoogleSheets(data) {
         const response = await fetch(url, {
             method: 'GET',
             mode: 'no-cors',
-            cache: 'no-cache' // Thêm để tránh cache
+            cache: 'no-cache', // Thêm để tránh cache
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
         
         console.log("Yêu cầu đã được gửi đến Google Sheets lúc:", new Date().toLocaleTimeString('vi-VN'));
@@ -57,7 +77,8 @@ async function sendToGoogleSheets(data) {
 function updateValue(elementId, value, unit = "") {
     const element = document.getElementById(elementId);
     if (element) {
-        if (value !== null && value !== undefined) {
+        // Modified check to include 0 values
+        if (value !== null && value !== undefined && value !== "") {
             element.textContent = `${value} ${unit}`;
         } else {
             element.textContent = `-- ${unit}`;
@@ -66,6 +87,8 @@ function updateValue(elementId, value, unit = "") {
         console.warn(`Element with ID ${elementId} not found`);
     }
 }
+
+// ... rest of the code ...
 
 // Firebase data paths
 const dataPaths = {
@@ -242,7 +265,7 @@ async function registerServiceWorker() {
 // Hàm bắt đầu gửi dữ liệu với Service Worker
 function startDataUploadWithServiceWorker() {
     if (navigator.serviceWorker.controller) {
-        const sheetURL = "https://script.google.com/macros/s/AKfycbzfiKethCCcF_4Z2YK3NoJsjeZXo2FvuQX0YfLlvqOngIYRIoBIriviTXZ06utJgnuybg/exec";
+        const sheetURL = "https://script.google.com/macros/s/AKfycbwf7LyEmqoZL5_o8TNYcCfvTtjfqd3sj8hILIJT2x2h-ANPPZH5okMrYY9Tn9G2bzgPtQ/exec";
         
         // Gửi tin nhắn đến Service Worker để bắt đầu gửi dữ liệu
         navigator.serviceWorker.controller.postMessage({
@@ -348,12 +371,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         onValue(dataRef, (snapshot) => {
             const data = snapshot.val();
-            console.log(`Data update for ${key}:`, data);
+            console.log(`Data update for ${key}:`, data, typeof data);
             
-            if (data === null || data === undefined) {
-                console.warn(`No data found at path: ${path}`);
-                updateValue(`${key}Value`, null, getUnit(key));
-                return;
+            // Add special debug for power and current
+            if (key === 'power' || key === 'current') {
+                console.log(`Raw ${key} value:`, data, 'Type:', typeof data);
             }
             
             // Store data for Google Sheets
